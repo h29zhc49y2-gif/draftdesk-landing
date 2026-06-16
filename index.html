@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DraftDesk - AI Copilot for Customer Support Teams</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+            background: #fafafa;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .hero .highlight {
+            background: rgba(255,255,255,0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .waitlist-form {
+            display: flex;
+            gap: 0.5rem;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .waitlist-form input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .waitlist-form button {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background: #1a1a2e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .waitlist-form button:hover {
+            background: #16213e;
+            transform: translateY(-2px);
+        }
+
+        .form-message {
+            margin-top: 1rem;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .form-message.success {
+            display: block;
+            background: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+
+        .form-message.error {
+            display: block;
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        .pain-section {
+            padding: 5rem 2rem;
+            text-align: center;
+            background: white;
+        }
+
+        .pain-section h2 {
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            color: #e74c3c;
+        }
+
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .pain-card {
+            padding: 2rem;
+            background: #fff5f5;
+            border-radius: 12px;
+            border-left: 4px solid #e74c3c;
+            text-align: left;
+        }
+
+        .pain-card .emoji { font-size: 2rem; margin-bottom: 1rem; }
+        .pain-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; color: #c0392b; }
+        .pain-card p { font-size: 0.95rem; color: #555; }
+
+        .solution-section {
+            padding: 5rem 2rem;
+            text-align: center;
+            background: #f8f9ff;
+        }
+
+        .solution-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .solution-section .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 3rem;
+        }
+
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .solution-card {
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: left;
+        }
+
+        .solution-card .icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .solution-card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .solution-card p { font-size: 0.95rem; color: #555; }
+
+        .how-section {
+            padding: 5rem 2rem;
+            text-align: center;
+            background: white;
+        }
+
+        .how-section h2 {
+            font-size: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 200px;
+            max-width: 250px;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+
+        .step h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .step p { font-size: 0.9rem; color: #666; }
+
+        .cta-section {
+            padding: 5rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        footer {
+            padding: 2rem;
+            text-align: center;
+            background: #1a1a2e;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1.1rem; }
+            .waitlist-form { flex-direction: column; }
+            .waitlist-form button { width: 100%; }
+            .steps { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <h1>Your Support Team Types 100 Similar Replies a Day. <span class="highlight">AI Writes the Drafts.</span></h1>
+        <p>DraftDesk is an AI copilot that drafts responses for your support agents. They review, edit with one click, and send. No more copy-paste. No more hallucinations sent to customers.</p>
+        <form class="waitlist-form" id="waitlist-form-1">
+            <input type="email" name="email" placeholder="Enter your work email" required>
+            <button type="submit">Join Waitlist</button>
+        </form>
+        <div class="form-message" id="form-message-1"></div>
+        <p class="waitlist-count">Be the first to try DraftDesk</p>
+    </section>
+
+    <section class="pain-section">
+        <h2>Sound Familiar?</h2>
+        <div class="pain-grid">
+            <div class="pain-card">
+                <div class="emoji">😤</div>
+                <h3>Same Questions, 100 Times a Day</h3>
+                <p>"Where's my order?" "How do I reset my password?" Your team types near-identical replies all day long.</p>
+            </div>
+            <div class="pain-card">
+                <div class="emoji">⏰</div>
+                <h3>24/7 Coverage is Impossible</h3>
+                <p>Customers don't keep business hours. Timezone gaps mean lost sales and frustrated users.</p>
+            </div>
+            <div class="pain-card">
+                <div class="emoji">💸</div>
+                <h3>Enterprise Tools Are Overkill</h3>
+                <p>Intercom and Zendesk cost $500+/mo and take months to set up. You need something that works today.</p>
+            </div>
+            <div class="pain-card">
+                <div class="emoji">🤖</div>
+                <h3>Chatbots Just Deflect</h3>
+                <p>AI chatbots ask clarifying questions, suggest help articles, then tell customers to call back. Problems stay unsolved.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="solution-section">
+        <h2>Meet DraftDesk</h2>
+        <p class="subtitle">AI drafts. Humans approve. Customers get fast, accurate answers.</p>
+        <div class="solution-grid">
+            <div class="solution-card">
+                <div class="icon">✍️</div>
+                <h3>AI Drafts Responses</h3>
+                <p>Customer asks a question. AI instantly generates 3 reply options based on your knowledge base and past conversations.</p>
+            </div>
+            <div class="solution-card">
+                <div class="icon">👀</div>
+                <h3>Human Reviews & Sends</h3>
+                <p>Your agent picks the best draft, edits if needed (one click), and sends. You stay in control. No hallucinations reach customers.</p>
+            </div>
+            <div class="solution-card">
+                <div class="icon">📚</div>
+                <h3>Learns Your Business</h3>
+                <p>Train on your docs, FAQs, and past tickets. Gets smarter over time. Knows your product better than any generic chatbot.</p>
+            </div>
+            <div class="solution-card">
+                <div class="icon">🔌</div>
+                <h3>Works Where You Work</h3>
+                <p>Chrome extension that works with Intercom, Zendesk, Freshdesk, live chat, email. No migration needed.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-section">
+        <h2>How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Install Extension</h3>
+                <p>Add DraftDesk to Chrome. Takes 30 seconds.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Connect Your Data</h3>
+                <p>Upload docs, FAQs, or paste your knowledge base. AI learns your business.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Start Drafting</h3>
+                <p>Customer message appears. AI drafts 3 replies. Pick, edit, send. Done.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Stop Typing. Start Solving.</h2>
+        <p>Join the waitlist. Be first to try DraftDesk when we launch.</p>
+        <form class="waitlist-form" id="waitlist-form-2">
+            <input type="email" name="email" placeholder="Enter your work email" required>
+            <button type="submit">Join Waitlist</button>
+        </form>
+        <div class="form-message" id="form-message-2"></div>
+    </section>
+
+    <footer>
+        <p>DraftDesk &copy; 2026. Built for support teams who'd rather solve problems than type replies.</p>
+    </footer>
+
+    <script>
+        async function handleFormSubmit(formId, messageElementId) {
+            const form = document.getElementById(formId);
+            const messageEl = document.getElementById(messageElementId);
+            
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = form.querySelector('input[type="email"]').value;
+                const button = form.querySelector('button');
+                
+                button.textContent = 'Joining...';
+                button.disabled = true;
+                
+                try {
+                    const response = await fetch('collect.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `email=${encodeURIComponent(email)}`
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === 'success') {
+                        messageEl.textContent = 'You are on the list! We will be in touch.';
+                        messageEl.className = 'form-message success';
+                        form.innerHTML = '<p style="font-size:1.2rem; color:white;">You are on the list!</p>';
+                    } else if (data.status === 'duplicate') {
+                        messageEl.textContent = 'You are already on the waitlist!';
+                        messageEl.className = 'form-message success';
+                    } else {
+                        messageEl.textContent = 'Something went wrong. Please try again.';
+                        messageEl.className = 'form-message error';
+                    }
+                } catch (error) {
+                    messageEl.textContent = 'Network error. Please try again.';
+                    messageEl.className = 'form-message error';
+                }
+                
+                button.textContent = 'Join Waitlist';
+                button.disabled = false;
+            });
+        }
+
+        handleFormSubmit('waitlist-form-1', 'form-message-1');
+        handleFormSubmit('waitlist-form-2', 'form-message-2');
+    </script>
+</body>
+</html>
